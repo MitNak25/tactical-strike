@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter-Strike HTML Edition</title>
+    <style>
+        :root {
+            --primary: #de9b35;
+            --primary-dark: #b87a22;
+            --bg-dark: #12161a;
+            --panel-bg: rgba(20, 26, 31, 0.85);
+            --text: #f0f0f0;
+            --ct-color: #4a90e2;
+            --t-color: #cc3333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: #000;
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* Pantallas principales */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-size: cover;
+            background-position: center;
+        }
+
+        #menu-screen {
+            display: flex;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920') no-repeat center center;
+            background-size: cover;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 80px;
+        }
+
+        .menu-container {
+            background: var(--panel-bg);
+            padding: 40px;
+            border-left: 5px solid var(--primary);
+            border-radius: 4px;
+            width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .menu-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        }
+
+        .menu-title span {
+            color: var(--primary);
+        }
+
+        .menu-btn {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ccc;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+
+        .menu-btn:hover {
+            background: var(--primary);
+            color: #000;
+            transform: translateX(10px);
+            border-color: var(--primary);
+        }
+
+        /* Panel de Ajustes / Lobby */
+        .modal-panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 30px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .setting-row label {
+            font-weight: 600;
+        }
+
+        .setting-row select, .setting-row input[type="range"] {
+            background: #222;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        /* Interfaz del Juego (HUD) */
+        #game-screen {
+            background: #1a1c1e;
+            position: relative;
+        }
+
+        #game-canvas {
+            background: #252b30;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .hud-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            font-family: monospace;
+        }
+
+        .hud-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .score-board {
+            background: rgba(0,0,0,0.6);
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .team-score.t { color: var(--t-color); }
+        .team-score.ct { color: var(--ct-color); }
+        .match-timer { color: #fff; min-width: 60px; text-align: center; }
+
+        .kill-feed {
+            background: rgba(0,0,0,0.3);
+            max-width: 300px;
+            padding: 10px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .kill-msg {
+            animation: fadeOut 4s forwards;
+        }
+
+        .hud-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 100%;
+        }
+
+        .hud-stat {
+            background: rgba(0,0,0,0.7);
+            padding: 15px 25px;
+            border-radius: 4px;
+            font-size: 2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        #hud-hp { border-left: 5px solid #2ecc71; color: #2ecc71; }
+        #hud-ammo { border-right: 5px solid var(--primary); color: var(--primary); }
+
+        /* Punto de mira (Crosshair) */
+        .crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+
+        .crosshair::before, .crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(0, 255, 0, 0.8);
+        }
+
+        .crosshair::before { top: 9px; left: 0; width: 20px; height: 2px; }
+        .crosshair::after { top: 0; left: 9px; width: 2px; height: 20px; }
+
+        /* Mensajes de centro */
+        .center-message {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.9);
+            text-align: center;
+            display: none;
+        }
+
+        .buy-zone-indicator {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid #2ecc71;
+            padding: 8px 12px;
+            border-radius: 4px;
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        /* Menú de compras */
+        #buy-menu {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--panel-bg);
+            border: 2px solid var(--primary);
+            padding: 30px;
+            border-radius: 8px;
+            width: 600px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            pointer-events: auto;
+        }
+
+        .buy-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .buy-item:hover {
+            background: rgba(222, 155, 53, 0.2);
+            border-color: var(--primary);
+        }
+
+        .buy-item .name { font-weight: bold; color: #fff; }
+        .buy-item .price { color: #2ecc71; font-family: monospace; }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Controles de Ayuda */
+        .controls-hint {
+            position: absolute;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #aaa;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA: MENÚ PRINCIPAL -->
+    <div id="menu-screen" class="screen">
+        <div class="menu-container">
+            <h1 class="menu-title">TACTICAL<span>.HTML</span></h1>
+            <button class="menu-btn" onclick="showScreen('lobby-screen')">Buscar Partida</button>
+            <button class="menu-btn" onclick="showScreen('settings-screen')">Ajustes</button>
+            <button class="menu-btn" onclick="window.close()">Salir</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA: LOBBY / SELECCIÓN DE BANDO -->
+    <div id="lobby-screen" class="screen" style="background: #111;">
+        <div class="modal-panel">
+            <h2 class="modal-title">Seleccionar Equipo</h2>
+            <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+                <button class="menu-btn" style="background: rgba(74, 144, 226, 0.2); border-color: var(--ct-color); text-align: center;" onclick="startGame('CT')">
+                    <span style="color: var(--ct-color); font-size: 1.4rem;">Counter-Terrorists</span>
+                </button>
+                <button class="menu-btn" style="background: rgba(204, 51, 51, 0.2); border-color: var(--t-color); text-align: center;" onclick="startGame('T')">
+                    <span style="color: var(--t-color); font-size: 1.4rem;">Terrorists</span>
+                </button>
+            </div>
+            <button class="menu-btn" onclick="showScreen('menu-screen')" style="text-align: center; background: transparent;">Volver</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA: AJUSTES -->
+    <div id="settings-screen" class="screen" style="background: #111;">
+        <div class="modal-panel">
+            <h2 class="modal-title">Configuración del Juego</h2>
+            <div class="setting-row">
+                <label>Sensibilidad del Ratón</label>
+                <input type="range" id="setting-sens" min="1" max="10" value="5">
+            </div>
+            <div class="setting-row">
+                <label>Dificultad de los Bots</label>
+                <select id="setting-bot-difficulty">
+                    <option value="easy">Fácil</option>
+                    <option value="medium" selected>Normal</option>
+                    <option value="hard">Experto</option>
+                </select>
+            </div>
+            <div class="setting-row">
+                <label>Volumen General</label>
+                <input type="range" id="setting-volume" min="0" max="100" value="70">
+            </div>
+            <button class="menu-btn" onclick="showScreen('menu-screen')" style="text-align: center; margin-top: 20px; background: var(--primary); color: #000;">Guardar y Volver</button>
+        </div>
+    </div>
+
+    <!-- PANTALLA: JUEGO ACTIVO (HUD) -->
+    <div id="game-screen" class="screen">
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- Punto de mira central -->
+        <div class="crosshair"></div>
+
+        <!-- Capa del HUD -->
+        <div class="hud-overlay">
+            <div class="hud-top">
+                <div class="buy-zone-indicator" id="buy-zone-hud">ZONA DE COMPRA (Presiona B)</div>
+                <div class="score-board">
+                    <span class="team-score ct" id="score-ct">0</span>
+                    <span class="match-timer" id="match-timer">01:50</span>
+                    <span class="team-score t" id="score-t">0</span>
+                </div>
+                <div class="kill-feed" id="kill-feed"></div>
+            </div>
+
+            <div class="controls-hint">Controles: WASD (Mover) | Ratón (Apuntar y Disparar) | R (Recargar) | B (Tienda) | Esc (Menú)</div>
+
+            <div class="hud-bottom">
+                <div class="hud-stat" id="hud-hp">✚ 100</div>
+                <div class="hud-stat" id="hud-ammo">30 / 90</div>
+            </div>
+        </div>
+
+        <!-- Mensajes del Centro (Ronda ganada, etc) -->
+        <div id="center-message" class="center-message"></div>
+
+        <!-- Menú de Compras Flotante -->
+        <div id="buy-menu">
+            <h2 class="modal-title" style="grid-column: span 2; margin-bottom: 10px;">Armamento disponible</h2>
+            <div class="buy-item" onclick="buyWeapon('AK47')">
+                <span class="name">AK-47 (Fusil)</span>
+                <span class="price">$2700</span>
+            </div>
+            <div class="buy-item" onclick="buyWeapon('M4A4')">
+                <span class="name">M4A4 (Fusil)</span>
+                <span class="price">$3100</span>
+            </div>
+            <div class="buy-item" onclick="buyWeapon('AWP')">
+                <span class="name">AWP (Francotirador)</span>
+                <span class="price">$4750</span>
+            </div>
+            <div class="buy-item" onclick="buyWeapon('DesertEagle')">
+                <span class="name">Desert Eagle (Pistola)</span>
+                <span class="price">$700</span>
+            </div>
+            <button class="menu-btn" onclick="toggleBuyMenu(false)" style="grid-column: span 2; margin-top: 15px; text-align: center;">Cerrar Tienda</button>
+        </div>
+    </div>
+
+    <!-- AUDIO SINTETIZADO (Web Audio API) -->
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playShootSound() {
+            if (!audioCtx) return;
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.15);
+        }
+
+        function playReloadSound() {
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.4);
+        }
+    </script>
+
+    <!-- MOTOR LOGICO DEL JUEGO -->
+    <script>
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Estado Global
+        let currentScreen = 'menu-screen';
+        let playerTeam = 'CT';
+        let gameState = {
+            running: false,
+            scoreCT: 0,
+            scoreT: 0,
+            timeLeft: 110,
+            buyZoneActive: true
+        };
+
+        // Atributos del Jugador
+        let player = {
+            x: 200, y: 300,
+            angle: 0,
+            hp: 100,
+            maxHp: 100,
+            speed: 4,
+            ammo: 30,
+            maxAmmo: 30,
+            reserveAmmo: 90,
+            isReloading: false,
+            weapon: 'M4A4',
+            radius: 15
+        };
+
+        // Entidades (Bots, Obstáculos, Balas)
+        let entities = [];
+        let bullets = [];
+        let obstacles = [
+            // Caja Central Grande
+            {x: 400, y: 250, w: 120, h: 120, color: '#5c4033'},
+            // Muros perimetrales interiores
+            {x: 150, y: 100, w: 40, h: 200, color: '#444'},
+            {x: 650, y: 300, w: 40, h: 200, color: '#444'},
+            {x: 300, y: 480, w: 300, h: 40, color: '#444'}
+        ];
+
+        // Teclado y Ratón
+        let keys = {};
+        let mouse = { x: 0, y: 0 };
+        let buyMenuOpen = false;
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+            document.getElementById(screenId).style.display = 'flex';
+            currentScreen = screenId;
+            if(screenId === 'game-screen') {
+                resizeCanvas();
+            } else {
+                gameState.running = false;
+            }
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // Control input teclado
+        window.addEventListener('keydown', e => {
+            keys[e.key.toLowerCase()] = true;
+            if(e.key.toLowerCase() === 'b' && currentScreen === 'game-screen') {
+                toggleBuyMenu(!buyMenuOpen);
+            }
+            if(e.key === 'Escape' && currentScreen === 'game-screen') {
+                if (buyMenuOpen) toggleBuyMenu(false);
+                else showScreen('menu-screen');
+            }
+            if(e.key.toLowerCase() === 'r' && !player.isReloading && player.ammo < player.maxAmmo) {
+                reloadWeapon();
+            }
+        });
+        window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+
+        // Movimiento de mira del ratón en Canvas 2D vista Top-Down
+        window.addEventListener('mousemove', e => {
+            if(currentScreen !== 'game-screen' || buyMenuOpen) return;
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+            // Calcular ángulo hacia el cursor
+            player.angle = Math.atan2(mouse.y - player.y, mouse.x - player.x);
+        });
+
+        window.addEventListener('mousedown', e => {
+            if(currentScreen !== 'game-screen' || buyMenuOpen) return;
+            if(e.button === 0) { // Click izquierdo
+                shoot();
+            }
+        });
+
+        function toggleBuyMenu(open) {
+            buyMenuOpen = open;
+            document.getElementById('buy-menu').style.display = open ? 'grid' : 'none';
+        }
+
+        function buyWeapon(type) {
+            player.weapon = type;
+            if (type === 'AWP') { player.maxAmmo = 10; player.ammo = 10; player.reserveAmmo = 30; }
+            else if (type === 'DesertEagle') { player.maxAmmo = 7; player.ammo = 7; player.reserveAmmo = 35; }
+            else { player.maxAmmo = 30; player.ammo = 30; player.reserveAmmo = 90; }
+            updateHUD();
+            toggleBuyMenu(false);
+            pushKillFeed("Tienda", "compró " + type, playerTeam);
+        }
+
+        function reloadWeapon() {
+            if(player.reserveAmmo <= 0) return;
+            player.isReloading = true;
+            playReloadSound();
+            setTimeout(() => {
+                let needed = player.maxAmmo - player.ammo;
+                let toLoad = Math.min(needed, player.reserveAmmo);
+                player.ammo += toLoad;
+                player.reserveAmmo -= toLoad;
+                player.isReloading = false;
+                updateHUD();
+            }, 1500);
+        }
+
+        function shoot() {
+            if(player.ammo <= 0 || player.isReloading) {
+                playReloadSound(); // Sonido vacío/recarga
+                return;
+            }
+            player.ammo--;
+            updateHUD();
+            playShootSound();
+
+            // Spawn Bala
+            bullets.push({
+                x: player.x + Math.cos(player.angle) * player.radius,
+                y: player.y + Math.sin(player.angle) * player.radius,
+                vx: Math.cos(player.angle) * 12,
+                vy: Math.sin(player.angle) * 12,
+                owner: 'player'
+            });
+        }
+
+        function updateHUD() {
+            document.getElementById('hud-hp').innerText = `✚ ${Math.max(0, Math.round(player.hp))}`;
+            document.getElementById('hud-ammo').innerText = `${player.ammo} / ${player.reserveAmmo}`;
+            document.getElementById('score-ct').innerText = gameState.scoreCT;
+            document.getElementById('score-t').innerText = gameState.scoreT;
+        }
+
+        function pushKillFeed(attacker, victim, team) {
+            const feed = document.getElementById('kill-feed');
+            const msg = document.createElement('div');
+            msg.className = 'kill-msg';
+            msg.style.color = team === 'CT' ? 'var(--ct-color)' : 'var(--t-color)';
+            msg.innerHTML = `<strong>${attacker}</strong> ➔ <span>${victim}</span>`;
+            feed.appendChild(msg);
+            setTimeout(() => msg.remove(), 4000);
+        }
+
+        function startGame(team) {
+            playerTeam = team;
+            player.hp = 100;
+            player.ammo = player.maxAmmo;
+            player.x = team === 'CT' ? 100 : window.innerWidth - 100;
+            player.y = window.innerHeight / 2;
+            
+            // Generar enemigos/aliados artificiales (Bots)
+            entities = [];
+            let oppTeam = team === 'CT' ? 'T' : 'CT';
+            for(let i=0; i<3; i++) {
+                entities.push({
+                    x: team === 'CT' ? window.innerWidth - 150 : 150,
+                    y: 150 + (i * 150),
+                    team: oppTeam,
+                    hp: 100,
+                    radius: 15,
+                    speed: 2,
+                    lastShot: 0
+                });
+            }
+
+            gameState.running = true;
+            showScreen('game-screen');
+            updateHUD();
+            startTimer();
+        }
+
+        function startTimer() {
+            gameState.timeLeft = 110;
+            clearInterval(gameState.timerInterval);
+            gameState.timerInterval = setInterval(() => {
+                if(!gameState.running) return;
+                gameState.timeLeft--;
+                let mins = Math.floor(gameState.timeLeft / 60).toString().padStart(2, '0');
+                let secs = (gameState.timeLeft % 60).toString().padStart(2, '0');
+                document.getElementById('match-timer').innerText = `${mins}:${secs}`;
+                
+                if(gameState.timeLeft <= 90) {
+                    document.getElementById('buy-zone-hud').style.display = 'none';
+                    gameState.buyZoneActive = false;
+                }
+
+                if(gameState.timeLeft <= 0) {
+                    endRound('Empate (Tiempo Agotado)');
+                }
+            }, 1000);
+        }
+
+        function endRound(winnerMessage) {
+            gameState.running = false;
+            let msgEl = document.getElementById('center-message');
+            msgEl.innerText = winnerMessage;
+            msgEl.style.display = 'block';
+            
+            if(winnerMessage.includes('CT')) gameState.scoreCT++;
+            if(winnerMessage.includes('Terrorists')) gameState.scoreT++;
+
+            setTimeout(() => {
+                msgEl.style.display = 'none';
+                startGame(playerTeam);
+            }, 3000);
+        }
+
+        // Bucle Principal de Renderizado y Física del Mapa Táctico 2D
+        function gameLoop() {
+            if(gameState.running && currentScreen === 'game-screen') {
+                updatePhysics();
+                renderGame();
+            }
+            requestAnimationFrame(gameLoop);
+        }
+
+        function updatePhysics() {
+            // Movimiento Jugador WASD
+            let dx = 0, dy = 0;
+            if (keys['w'] || keys['arrowup']) dy -= player.speed;
+            if (keys['s'] || keys['arrowdown']) dy += player.speed;
+            if (keys['a'] || keys['arrowleft']) dx -= player.speed;
+            if (keys['d'] || keys['arrowright']) dx += player.speed;
+
+            // Detección de colisiones simples del jugador con los obstáculos
+            let nextX = player.x + dx;
+            let nextY = player.y + dy;
+
+            for(let obs of obstacles) {
+                if(nextX + player.radius > obs.x && nextX - player.radius < obs.x + obs.w &&
+                   nextY + player.radius > obs.y && nextY - player.radius < obs.y + obs.h) {
+                    dx = 0; dy = 0; // Detener en seco
+                }
+            }
+
+            player.x = Math.max(player.radius, Math.min(canvas.width - player.radius, player.x + dx));
+            player.y = Math.max(player.radius, Math.min(canvas.height - player.radius, player.y + dy));
+
+            // Actualizar Balas
+            for(let i = bullets.length - 1; i >= 0; i--) {
+                let b = bullets[i];
+                b.x += b.vx;
+                b.y += b.vy;
+
+                // Colisión bala con obstáculos
+                for(let obs of obstacles) {
+                    if(b.x > obs.x && b.x < obs.x + obs.w && b.y > obs.y && b.y < obs.y + obs.h) {
+                        bullets.splice(i, 1);
+                        break;
+                    }
+                }
+
+                if(!bullets[i]) continue;
+
+                // Colisión con enemigos (Jugador dispara a Bots)
+                if(b.owner === 'player') {
+                    for(let bot of entities) {
+                        let dist = Math.hypot(bot.x - b.x, bot.y - b.y);
+                        if(dist < bot.radius) {
+                            bot.hp -= player.weapon === 'AWP' ? 100 : 35;
+                            bullets.splice(i, 1);
+                            if(bot.hp <= 0) {
+                                pushKillFeed("Tú", "Bot Enemigo", playerTeam);
+                                entities = entities.filter(e => e !== bot);
+                            }
+                            break;
+                        }
+                    }
+                } else {
+                    // Bot dispara al jugador
+                    let dist = Math.hypot(player.x - b.x, player.y - b.y);
+                    if(dist < player.radius) {
+                        player.hp -= 20;
+                        bullets.splice(i, 1);
+                        updateHUD();
+                        if(player.hp <= 0) {
+                            endRound('Ronda ganada por el enemigo');
+                        }
+                    }
+                }
+
+                // Fuera de límites de pantalla
+                if(bullets[i] && (b.x < 0 || b.x > canvas.width || b.y < 0 || b.y > canvas.height)) {
+                    bullets.splice(i, 1);
+                }
+            }
+
+            // Comportamiento de IA (Bots) simples
+            entities.forEach(bot => {
+                // Moverse lentamente hacia la posición del jugador
+                let angleToPlayer = Math.atan2(player.y - bot.y, player.x - bot.x);
+                bot.x += Math.cos(angleToPlayer) * bot.speed;
+                bot.y += Math.sin(angleToPlayer) * bot.speed;
+
+                // Disparar cada cierto intervalo aleatorio si tiene línea de visión
+                let now = Date.now();
+                if(now - bot.lastShot > 1500 + Math.random() * 1000) {
+                    bot.lastShot = now;
+                    bullets.push({
+                        x: bot.x + Math.cos(angleToPlayer) * bot.radius,
+                        y: bot.y + Math.sin(angleToPlayer) * bot.radius,
+                        vx: Math.cos(angleToPlayer) * 8,
+                        vy: Math.sin(angleToPlayer) * 8,
+                        owner: 'bot'
+                    });
+                }
+            });
+
+            // Verificar condición de victoria instantánea (Todos los bots muertos)
+            if(entities.length === 0) {
+                endRound(playerTeam === 'CT' ? 'Counter-Terrorists ganan la ronda' : 'Terrorists ganan la ronda');
+            }
+        }
+
+        function renderGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Dibujar fondo de zona de combate / rejilla táctica
+            ctx.strokeStyle = '#2d353c';
+            ctx.lineWidth = 1;
+            for(let x=0; x<canvas.width; x+=40) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for(let y=0; y<canvas.height; y+=40) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+
+            // Dibujar Obstáculos / Muros
+            obstacles.forEach(obs => {
+                ctx.fillStyle = obs.color;
+                ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#111';
+                ctx.strokeRect(obs.x, obs.y, obs.w, obs.h);
+            });
+
+            // Dibujar Balas
+            bullets.forEach(b => {
+                ctx.fillStyle = b.owner === 'player' ? '#f1c40f' : '#e74c3c';
+                ctx.beginPath();
+                ctx.arc(b.x, b.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Dibujar Bots Inteligencia Artificial
+            entities.forEach(bot => {
+                ctx.fillStyle = bot.team === 'CT' ? 'var(--ct-color)' : 'var(--t-color)';
+                ctx.beginPath();
+                ctx.arc(bot.x, bot.y, bot.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#fff';
+                ctx.stroke();
+
+                // Barra de Vida minúscula sobre el Bot
+                ctx.fillStyle = '#c0392b';
+                ctx.fillRect(bot.x - 15, bot.y - 25, 30, 4);
+                ctx.fillStyle = '#2ecc71';
+                ctx.fillRect(bot.x - 15, bot.y - 25, (bot.hp / 100) * 30, 4);
+            });
+
+            // Dibujar al Jugador Humano
+            ctx.save();
+            ctx.translate(player.x, player.y);
+            ctx.rotate(player.angle);
+
+            // Cuerpo del Personaje
+            ctx.fillStyle = playerTeam === 'CT' ? 'var(--ct-color)' : 'var(--t-color)';
+            ctx.beginPath();
+            ctx.arc(0, 0, player.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = '#fff';
+            ctx.stroke();
+
+            // Dibujar el arma apuntando adelante
+            ctx.fillStyle = '#7f8c8d';
+            ctx.fillRect(10, -4, 18, 8);
+
+            ctx.restore();
+        }
+
+        // Inicializar bucle de ejecución
+        gameLoop();
+    </script>
+</body>
+</html>
