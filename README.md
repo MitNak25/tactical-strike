@@ -1,110 +1,148 @@
 # 🎯 Tactical Strike
 
-> Shooter táctico HTML5 · desarrollo por versiones · releases automáticos
+> HTML5 tactical shooter · version-driven development · automated releases
 
-![badge](https://img.shields.io/badge/estado-en%20desarrollo-fbbf24)
-![badge](https://img.shields.io/badge/versión-v0.1.0-38bdf8)
-![badge](https://img.shields.io/badge/tecnología-HTML%20CSS%20JS-0f172a)
+![Status](https://img.shields.io/badge/status-in%20development-fbbf24)
+![Version](https://img.shields.io/badge/version-v0.1.0-38bdf8)
+![Technology](https://img.shields.io/badge/technology-HTML%20CSS%20JS-0f172a)
+![License](https://img.shields.io/badge/license-MIT-34d399)
 
-Tactical Strike es un juego de disparos táctico en navegador, inspirado en la intensidad de los shooters competitivos. La idea del proyecto es crear una experiencia rápida, técnica y muy jugable, con una estructura pensada para crecer por versiones: mejoras, nuevos modos, nuevas armas, mapas y contenido premium en cada release.
+Tactical Strike is a browser-based tactical shooter inspired by the intensity of competitive shooters. The project aims to deliver a fast, technical, and highly replayable experience, with a structure designed to grow through regular releases: new weapons, maps, game modes, improvements, and additional content.
 
-## Objetivo del juego
+> ⚠️ This is an independent project inspired by the shooter genre. It does not use assets, trademarks, or code from other games.
 
-- Rangos de combate rápidos
-- Movimiento fluido y control directo
-- Enemigos agresivos y progresivos
-- Sistema de puntuación y oleadas
-- Estética minimalista y táctica
+## 🎮 Game objective
 
-## Cómo jugar
+- Survive increasingly difficult enemy waves.
+- Aim accurately and react quickly.
+- Build the highest score possible.
+- Master movement and positioning.
+- Keep improving with every new version.
 
-1. Abre `index.html` en tu navegador o usa un servidor local.
-2. Mueve al personaje con `WASD` o flechas.
-3. Apunta con el ratón.
-4. Dispara con clic izquierdo o `Espacio`.
-5. Sobrevive oleadas y gana puntos.
+## 🕹️ How to play
+
+1. Open `index.html` in a modern browser, or use a local server.
+2. Move with `WASD` or the arrow keys.
+3. Aim with the mouse.
+4. Shoot with the left mouse button or `Space`.
+5. Survive enemy waves and earn points.
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Después entra a:
+Then visit:
 
 ```text
 http://localhost:8000
 ```
 
-## Estructura del proyecto
+## ✨ Current features
+
+- Real-time arcade combat rendered with HTML5 Canvas.
+- Direct mouse aiming and responsive shooting.
+- Enemies that spawn from the edges and chase the player.
+- Progressive waves with increasing difficulty.
+- Health, score, particles, and game-over screen.
+- Responsive interface for different screen sizes.
+- No external dependencies: pure HTML, CSS, and JavaScript.
+- Version snapshots and downloadable GitHub Releases.
+
+## 📁 Project structure
 
 ```text
 Tactical Strike/
 ├── .github/
 │   └── workflows/
-│       ├── pages.yml
-│       └── release.yml
+│       ├── pages.yml              # Automatic GitHub Pages deployment
+│       └── release.yml            # Automatic ZIP release for v*.*.* tags
 ├── assets/
-│   └── README.md
+│   └── README.md                  # Guide for future images and audio
 ├── versions/
-│   ├── README.md
+│   ├── README.md                  # Versioning policy
 │   └── v0.1.0/
-│       ├── README.md
-│       ├── index.html
+│       ├── README.md              # Initial release notes
+│       ├── index.html             # Historical playable snapshot
 │       └── style.css
 ├── releases/
-│   └── README.md
-├── index.html
-├── style.css
-├── game.js
+│   └── README.md                  # Release and download guide
+├── index.html                     # Main game entry point
+├── style.css                      # User interface and visual style
+├── game.js                        # Game loop, entities, and gameplay
 ├── LICENSE
 ├── README.md
 └── .gitignore
 ```
 
-## Versionado
+## 🧭 Roadmap
 
-Se usarán versiones semánticas:
+### v0.1.0 · First Contact ✅
 
-- `v0.1.0` = primera build jugable
-- `v0.2.0` = mejoras del gameplay
-- `v0.3.0` = nuevas armas y sistemas
-- `v1.0.0` = versión estable pública
+Basic movement, aiming, shooting, enemies, score, health, waves, particles, and the first playable combat loop.
 
-Cada versión queda almacenada en la carpeta `versions/` con su propio README y snapshot.
+### v0.2.0 · Tactical Pressure 🚧
 
-## Releases
+Improved balancing, a start menu, obstacles, new enemy types, and sound effects.
 
-Cuando se publique un tag como `v0.2.0`, el workflow de GitHub Actions genera un ZIP descargable y un Release en GitHub con ese paquete.
+### v0.3.0 · Arsenal 🚧
+
+Multiple weapons, ammunition, reloading, weapon identities, and unlockable upgrades.
+
+### v0.4.0 · The Operation 🔭
+
+Cover-based maps, round objectives, extraction zones, and mission-focused gameplay.
+
+### v1.0.0 · Tactical Strike Stable 🔭
+
+A polished experience with local saves, statistics, accessibility improvements, and additional game modes.
+
+## 📦 Versioning and releases
+
+This project uses [Semantic Versioning](https://semver.org/):
+
+- `v0.1.0` — first playable build
+- `v0.2.0` — gameplay improvements
+- `v0.3.0` — new weapons and systems
+- `v1.0.0` — stable public release
+
+Every historical version is stored in `versions/` with its own release notes and snapshot. Published versions should not be modified; new changes belong in a new version folder.
+
+To publish a new release:
 
 ```bash
+git add .
+git commit -m "feat: prepare Tactical Strike v0.2.0"
 git tag v0.2.0
-git push origin v0.2.0
+git push origin main --tags
 ```
 
-## Roadmap
+The `release.yml` workflow detects the tag, creates a ZIP package, and publishes a downloadable GitHub Release automatically.
 
-### v0.1.0
-- Movimiento básico
-- Disparo y apuntado
-- Enemigos básicos
-- Vida y puntuación
-- Oleadas
+## 🧑‍💻 Development
 
-### v0.2.0
-- Menú inicial
-- Nuevos enemigos
-- Mejoras visuales
-- Efectos de sonido
+No Node.js installation or build process is required. Edit the files and refresh the browser. For the most reliable local experience, use a static server:
 
-### v0.3.0
-- Sistema de armas
-- Balance y habilidades
-- Mapas con cobertura
+```bash
+python3 -m http.server 8000
+```
 
-### v1.0.0
-- Modo competitivo
-- Pulido final de juego
-- Mejor experiencia y estabilidad
+The current game is intentionally built with native browser technologies to keep the project lightweight, accessible, and easy to extend.
 
-## Licencia
+## 🤝 Contributing
 
-MIT
+Issues, ideas, and improvements are welcome:
+
+1. Open an issue describing the proposal or problem.
+2. Include reproduction steps for bug reports.
+3. Keep changes focused and easy to review.
+4. Test the game in an up-to-date browser.
+5. Document changes that affect controls, balance, or gameplay.
+
+## 📜 License
+
+Tactical Strike is released under the **MIT License**. See [`LICENSE`](LICENSE) for the complete terms.
+
+<p align="center">
+  <strong>Aim. React. Survive.</strong><br>
+  <sub>Tactical Strike — every round counts.</sub>
+</p>
