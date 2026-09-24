@@ -4,10 +4,10 @@
 
 ![Status](https://img.shields.io/badge/status-in%20development-fbbf24)
 ![Version](https://img.shields.io/badge/version-v0.1.0-38bdf8)
-![Technology](https://img.shields.io/badge/technology-HTML%20CSS%20JS-0f172a)
+![Technology](https://img.shields.io/badge/technology-HTML%20CSS%20JavaScript-0f172a)
 ![License](https://img.shields.io/badge/license-MIT-34d399)
 
-Tactical Strike is a browser-based tactical shooter inspired by the intensity of competitive shooters. The project aims to deliver a fast, technical, and highly replayable experience, with a structure designed to grow through regular releases: new weapons, maps, game modes, improvements, and additional content.
+Tactical Strike is a browser-based tactical shooter inspired by the intensity of competitive shooters. The project is designed to deliver fast, technical, and replayable gameplay while growing through carefully documented versions, new weapons, maps, systems, and game modes.
 
 > ⚠️ This is an independent project inspired by the shooter genre. It does not use assets, trademarks, or code from other games.
 
@@ -21,21 +21,31 @@ Tactical Strike is a browser-based tactical shooter inspired by the intensity of
 
 ## 🕹️ How to play
 
-1. Open `index.html` in a modern browser, or use a local server.
+1. Open `version/v0.1.0/index.html` for the current playable build, or use the main entry point when available.
 2. Move with `WASD` or the arrow keys.
 3. Aim with the mouse.
 4. Shoot with the left mouse button or `Space`.
 5. Survive enemy waves and earn points.
 
 ```bash
+cd version/v0.1.0
 python3 -m http.server 8000
 ```
 
-Then visit:
+Then visit [`http://localhost:8000`](http://localhost:8000).
 
-```text
-http://localhost:8000
-```
+## 🚀 Releases and downloads
+
+Download a version from the official GitHub Releases page. Each release includes a ZIP package containing the corresponding playable build.
+
+| Version | Status | Release page | Play from source |
+|---|---|---|---|
+| **v0.1.0 — First Contact** | Current | [![Download v0.1.0](https://img.shields.io/badge/Download-v0.1.0-38bdf8?style=for-the-badge)](https://github.com/MitNak25/tactical-strike/releases/tag/v0.1.0) | [`version/v0.1.0`](./version/v0.1.0) |
+| **Latest release** | Always updated | [![Latest release](https://img.shields.io/badge/See_latest_release-34d399?style=for-the-badge)](https://github.com/MitNak25/tactical-strike/releases/latest) | — |
+
+> If a release link is not available yet, the version can still be played directly from its folder. Release packages are generated when a version tag is published.
+
+[**View all Tactical Strike releases →**](https://github.com/MitNak25/tactical-strike/releases)
 
 ## ✨ Current features
 
@@ -53,22 +63,25 @@ http://localhost:8000
 ```text
 Tactical Strike/
 ├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   │   ├── bug_report.md
+│   │   └── feature_request.md
 │   └── workflows/
 │       ├── pages.yml              # Automatic GitHub Pages deployment
 │       └── release.yml            # Automatic ZIP release for v*.*.* tags
 ├── assets/
 │   └── README.md                  # Guide for future images and audio
-├── versions/
-│   ├── README.md                  # Versioning policy
-│   └── v0.1.0/
-│       ├── README.md              # Initial release notes
-│       ├── index.html             # Historical playable snapshot
-│       └── style.css
+├── docs/
+│   └── RELEASE_CHECKLIST.md       # Maintainer checklist
 ├── releases/
 │   └── README.md                  # Release and download guide
-├── index.html                     # Main game entry point
-├── style.css                      # User interface and visual style
-├── game.js                        # Game loop, entities, and gameplay
+├── version/
+│   ├── README.md                  # Version catalog
+│   └── v0.1.0/
+│       ├── README.md              # Release notes
+│       ├── index.html             # Playable build
+│       ├── style.css
+│       └── game.js
 ├── LICENSE
 ├── README.md
 └── .gitignore
@@ -96,7 +109,7 @@ Cover-based maps, round objectives, extraction zones, and mission-focused gamepl
 
 A polished experience with local saves, statistics, accessibility improvements, and additional game modes.
 
-## 📦 Versioning and releases
+## 📦 Versioning
 
 This project uses [Semantic Versioning](https://semver.org/):
 
@@ -105,7 +118,7 @@ This project uses [Semantic Versioning](https://semver.org/):
 - `v0.3.0` — new weapons and systems
 - `v1.0.0` — stable public release
 
-Every historical version is stored in `versions/` with its own release notes and snapshot. Published versions should not be modified; new changes belong in a new version folder.
+Every historical version is stored in `version/` with its own release notes and snapshot. Published versions should not be modified; new changes belong in a new version folder.
 
 To publish a new release:
 
