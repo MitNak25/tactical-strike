@@ -1,161 +1,123 @@
 # 🎯 Tactical Strike
 
-> HTML5 tactical shooter · version-driven development · automated releases
+> HTML5 tactical shooter · version-driven development · browser-based releases
 
 ![Status](https://img.shields.io/badge/status-in%20development-fbbf24)
-![Version](https://img.shields.io/badge/version-v0.1.0-38bdf8)
-![Technology](https://img.shields.io/badge/technology-HTML%20CSS%20JavaScript-0f172a)
+![Version](https://img.shields.io/badge/version-v1.0%20prototype-38bdf8)
+![Technology](https://img.shields.io/badge/technology-HTML5%20%7C%20CSS3%20%7C%20JavaScript-0f172a)
 ![License](https://img.shields.io/badge/license-MIT-34d399)
 
-Tactical Strike is a browser-based tactical shooter inspired by the intensity of competitive shooters. The project is designed to deliver fast, technical, and replayable gameplay while growing through carefully documented versions, new weapons, maps, systems, and game modes.
+Tactical Strike is an independent top-down tactical shooter for the browser. Choose a faction, enter a compact arena, fight enemy bots, manage ammunition, buy weapons, and win rounds before the timer expires.
 
-> ⚠️ This is an independent project inspired by the shooter genre. It does not use assets, trademarks, or code from other games.
+> This is an independent project inspired by the tactical shooter genre. It does not use code, assets, or trademarks from other games.
 
-## 🎮 Game objective
+## 🚀 Play the current build
 
-- Survive increasingly difficult enemy waves.
-- Aim accurately and react quickly.
-- Build the highest score possible.
-- Master movement and positioning.
-- Keep improving with every new version.
+- [![Play V1.0 Prototype](https://img.shields.io/badge/PLAY-V1.0%20PROTOTYPE-38bdf8?style=for-the-badge)](./version/tactical_strike_V1.0%20-Release.html)
+- [![Download releases](https://img.shields.io/badge/DOWNLOAD-GitHub%20Releases-34d399?style=for-the-badge)](https://github.com/MitNak25/tactical-strike/releases)
+- [![Latest release](https://img.shields.io/badge/LATEST-Release-fbbf24?style=for-the-badge)](https://github.com/MitNak25/tactical-strike/releases/latest)
 
-## 🕹️ How to play
-
-1. Open `version/v0.1.0/index.html` for the current playable build, or use the main entry point when available.
-2. Move with `WASD` or the arrow keys.
-3. Aim with the mouse.
-4. Shoot with the left mouse button or `Space`.
-5. Survive enemy waves and earn points.
+> GitHub does not execute HTML directly in the repository viewer. Download the release ZIP, or run the file locally with a static server.
 
 ```bash
-cd version/v0.1.0
 python3 -m http.server 8000
 ```
 
-Then visit [`http://localhost:8000`](http://localhost:8000).
+Then open the file at:
 
-## 🚀 Releases and downloads
+```text
+http://localhost:8000/version/tactical_strike_V1.0%20-Release.html
+```
 
-Download a version from the official GitHub Releases page. Each release includes a ZIP package containing the corresponding playable build.
+## 🎮 Controls
 
-| Version | Status | Release page | Play from source |
-|---|---|---|---|
-| **v0.1.0 — First Contact** | Current | [![Download v0.1.0](https://img.shields.io/badge/Download-v0.1.0-38bdf8?style=for-the-badge)](https://github.com/MitNak25/tactical-strike/releases/tag/v0.1.0) | [`version/v0.1.0`](./version/v0.1.0) |
-| **Latest release** | Always updated | [![Latest release](https://img.shields.io/badge/See_latest_release-34d399?style=for-the-badge)](https://github.com/MitNak25/tactical-strike/releases/latest) | — |
+| Action | Control |
+|---|---|
+| Move | `W`, `A`, `S`, `D` or arrow keys |
+| Aim | Mouse movement |
+| Fire | Left mouse button |
+| Reload | `R` |
+| Open / close buy menu | `B` |
+| Close buy menu or return to main menu | `Escape` |
+| Choose a faction | Click **Counter-Terrorists** or **Terrorists** |
+| Buy a weapon | Open the buy menu and click a weapon |
 
-> If a release link is not available yet, the version can still be played directly from its folder. Release packages are generated when a version tag is published.
+The game is currently designed for desktop browsers. A mouse and keyboard are recommended.
 
-[**View all Tactical Strike releases →**](https://github.com/MitNak25/tactical-strike/releases)
+## 🧩 Gameplay
 
-## ✨ Current features
+- Pick a faction from the lobby.
+- Defeat three enemy bots before the round timer reaches zero.
+- Use walls and the central crate as cover.
+- Keep track of health and ammunition in the bottom HUD.
+- Use the buy menu to switch between the AK-47, M4A4, AWP, and Desert Eagle.
+- Rounds restart automatically after a win, loss, or timeout.
+- The scoreboard tracks Counter-Terrorist and Terrorist round wins.
 
-- Real-time arcade combat rendered with HTML5 Canvas.
-- Direct mouse aiming and responsive shooting.
-- Enemies that spawn from the edges and chase the player.
-- Progressive waves with increasing difficulty.
-- Health, score, particles, and game-over screen.
-- Responsive interface for different screen sizes.
-- No external dependencies: pure HTML, CSS, and JavaScript.
-- Version snapshots and downloadable GitHub Releases.
+## ⚙️ Settings
 
-## 📁 Project structure
+The prototype includes mouse sensitivity, bot difficulty, and volume controls in the settings screen. These controls are part of the interface prototype and are not yet connected to gameplay logic. They are planned for a future gameplay systems update.
+
+## 📁 Repository structure
 
 ```text
 Tactical Strike/
-├── .github/
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── bug_report.md
-│   │   └── feature_request.md
-│   └── workflows/
-│       ├── pages.yml              # Automatic GitHub Pages deployment
-│       └── release.yml            # Automatic ZIP release for v*.*.* tags
-├── assets/
-│   └── README.md                  # Guide for future images and audio
-├── docs/
-│   └── RELEASE_CHECKLIST.md       # Maintainer checklist
-├── releases/
-│   └── README.md                  # Release and download guide
 ├── version/
-│   ├── README.md                  # Version catalog
-│   └── v0.1.0/
-│       ├── README.md              # Release notes
-│       ├── index.html             # Playable build
-│       ├── style.css
-│       └── game.js
+│   ├── README.md
+│   ├── v1.0.0/
+│   │   └── README.md
+│   └── tactical_strike_V1.0 -Release.html
+├── docs/
+│   └── GAMEPLAY_REVIEW.md
+├── releases/
+│   └── README.md
+├── .github/
+│   └── workflows/
 ├── LICENSE
-├── README.md
-└── .gitignore
+└── README.md
 ```
 
 ## 🧭 Roadmap
 
-### v0.1.0 · First Contact ✅
+### v1.0 Prototype ✅
 
-Basic movement, aiming, shooting, enemies, score, health, waves, particles, and the first playable combat loop.
+Playable menu, faction selection, top-down combat, bots, obstacles, rounds, timer, HUD, ammunition, reloading, weapon selection, kill feed, and synthesized audio.
 
-### v0.2.0 · Tactical Pressure 🚧
+### v1.1 — Gameplay systems 🚧
 
-Improved balancing, a start menu, obstacles, new enemy types, and sound effects.
+Connect settings to the game, add credits and real weapon prices, improve collision resolution, add fire-rate balancing, and make the buy zone affect purchasing.
 
-### v0.3.0 · Arsenal 🚧
+### v1.2 — Content update 🔭
 
-Multiple weapons, ammunition, reloading, weapon identities, and unlockable upgrades.
+Additional arenas, bot behaviors, objectives, sound controls, mobile-friendly input, and a clearer round result screen.
 
-### v0.4.0 · The Operation 🔭
+### v2.0 — Tactical Strike 🔭
 
-Cover-based maps, round objectives, extraction zones, and mission-focused gameplay.
+Expanded game modes, persistent statistics, improved accessibility, polished visuals, and a complete release package.
 
-### v1.0.0 · Tactical Strike Stable 🔭
+## 📦 Releases and versioning
 
-A polished experience with local saves, statistics, accessibility improvements, and additional game modes.
-
-## 📦 Versioning
-
-This project uses [Semantic Versioning](https://semver.org/):
-
-- `v0.1.0` — first playable build
-- `v0.2.0` — gameplay improvements
-- `v0.3.0` — new weapons and systems
-- `v1.0.0` — stable public release
-
-Every historical version is stored in `version/` with its own release notes and snapshot. Published versions should not be modified; new changes belong in a new version folder.
-
-To publish a new release:
+Version folders contain the playable source snapshots. GitHub Releases contain downloadable packages for public builds.
 
 ```bash
 git add .
-git commit -m "feat: prepare Tactical Strike v0.2.0"
-git tag v0.2.0
+git commit -m "release: Tactical Strike v1.0.0"
+git tag v1.0.0
 git push origin main --tags
 ```
 
-The `release.yml` workflow detects the tag, creates a ZIP package, and publishes a downloadable GitHub Release automatically.
+Use [Semantic Versioning](https://semver.org/) for future releases. Do not modify historical builds after publishing; create a new version folder instead.
 
 ## 🧑‍💻 Development
 
-No Node.js installation or build process is required. Edit the files and refresh the browser. For the most reliable local experience, use a static server:
-
-```bash
-python3 -m http.server 8000
-```
-
-The current game is intentionally built with native browser technologies to keep the project lightweight, accessible, and easy to extend.
+No build tool or dependency installation is required. The game uses native HTML, CSS, Canvas 2D, and the Web Audio API. A local static server is recommended because it behaves more consistently than opening a file directly.
 
 ## 🤝 Contributing
 
-Issues, ideas, and improvements are welcome:
-
-1. Open an issue describing the proposal or problem.
-2. Include reproduction steps for bug reports.
-3. Keep changes focused and easy to review.
-4. Test the game in an up-to-date browser.
-5. Document changes that affect controls, balance, or gameplay.
+Bug reports and feature ideas are welcome. Please include your browser, operating system, reproduction steps, and the version you tested.
 
 ## 📜 License
 
-Tactical Strike is released under the **MIT License**. See [`LICENSE`](LICENSE) for the complete terms.
+Tactical Strike is released under the **MIT License**. See [`LICENSE`](LICENSE) for the full terms.
 
-<p align="center">
-  <strong>Aim. React. Survive.</strong><br>
-  <sub>Tactical Strike — every round counts.</sub>
-</p>
+<p align="center"><strong>Aim. React. Survive.</strong><br><sub>Tactical Strike — every round counts.</sub></p>
